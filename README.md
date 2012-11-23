@@ -29,7 +29,8 @@ $ compile-modules foo.js --to compiled
 Here is the basic usage:
 
 ```
-compile-modules INPUT --to OUTPUT [--type=TYPE] [--anonymous]
+compile-modules INPUT --to OUTPUT [--type=TYPE]
+  [--anonymous] [--module-name=NAME]
 
 INPUT
   An input file or glob pattern relative to the current
@@ -46,6 +47,13 @@ TYPE
 ANONYMOUS
   If you use the --anonymous flag with the AMD type, the
   transpiler will output a module with no name.
+
+NAME
+  You can supply a name to use as the module name.
+  By default, the transpiler will use the name of the
+  file (without the ending `.js`) as the module name.
+  You may not use this option if your INPUT resolves
+  to multiple files.
 ```
 
 ### Library
