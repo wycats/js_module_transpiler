@@ -1,0 +1,4 @@
+require "js_module_transpiler"
+require "js_module_transpiler/cli"
+
+JsModuleTranspiler::CLI.start(ARGV)
