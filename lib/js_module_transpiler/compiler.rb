@@ -6,8 +6,8 @@ module JsModuleTranspiler
     EXPORT = %r{^\s*export\s+(?<exports>.*)\s*;\s*$}
     EXPORT_AS = %r{^\s*export\s*=\s*(?<export>.*)\s*;\s*$}
 
-    IMPORT = %r{^\s*import\s+(?<pattern>.*)\s+from\s+"(?<import>[^"]+)"\s*;\s*$}
-    IMPORT_AS = %r{^\s*import\s+"(?<import>[^"]+)"\s*as\s+(?<variable>.*)\s*;\s*$}
+    IMPORT = %r{^\s*import\s+(?<pattern>.*)\s+from\s+(?:"(?<import>[^"]+)"|'(?<import>[^']+)')\s*;\s*$}
+    IMPORT_AS = %r{^\s*import\s+(?:"(?<import>[^"]+)"|'(?<import>[^']+)')\s*as\s+(?<variable>.*)\s*;\s*$}
 
     # not supported yet
     #EXPORT_FROM = %r{^\s*export\s*(?<exports>.*)\s*from\s*"(?<module>[^"]+)"\s*;\s*$}

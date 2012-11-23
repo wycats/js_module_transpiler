@@ -103,9 +103,35 @@ describe "JsModuleTranspiler::Compiler (to_amd)" do
     OUTPUT
   end
 
+  it "support single quotes in import from" do
+    should_compile_as <<-INPUT, <<-OUTPUT
+      import { get, set } from 'ember';
+    INPUT
+      define("jquery",
+        ["ember"],
+        function(__dependency1__) {
+          "use strict";
+          var get = __dependency1__.get;
+          var set = __dependency1__.set;
+        });
+    OUTPUT
+  end
+
   it "converts `import \"bar\" as foo`" do
     should_compile_as <<-INPUT, <<-OUTPUT
       import "underscore" as _;
+    INPUT
+      define("jquery",
+        ["underscore"],
+        function(_) {
+          "use strict";
+        });
+    OUTPUT
+  end
+
+  it "supports single quotes in import as" do
+    should_compile_as <<-INPUT, <<-OUTPUT
+      import 'underscore' as _;
     INPUT
       define("jquery",
         ["underscore"],
