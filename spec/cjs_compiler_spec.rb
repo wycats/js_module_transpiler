@@ -25,23 +25,6 @@ describe "JsModuleTranspiler::Compiler (to_cjs)" do
     OUTPUT
   end
 
-  it "uses a single window export if `export foo` is used with the :into option" do
-    should_compile_cjs <<-INPUT, <<-OUTPUT, :into => "Ember"
-      var get = function() {};
-      var set = function() {};
-
-      export get;
-      export set;
-    INPUT
-      "use strict";
-      var get = function() {};
-      var set = function() {};
-
-      exports.get = get;
-      exports.set = set;
-    OUTPUT
-  end
-
   it "generates an export object if `export { foo, bar }` is used" do
     should_compile_cjs <<-INPUT, <<-OUTPUT
       var get = function() { };
