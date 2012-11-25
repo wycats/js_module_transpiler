@@ -31,6 +31,7 @@ Here is the basic usage:
 ```
 compile-modules INPUT --to OUTPUT [--type=TYPE]
   [--anonymous] [--module-name=NAME]
+  [--global=GLOBAL] [--imports=IMPORTS]
 
 INPUT
   An input file or glob pattern relative to the current
@@ -41,8 +42,9 @@ OUTPUT
   If it does not exist, it will be created.
 
 TYPE
-  One of `amd` (for AMD output) or `cjs` (for CommonJS
-  output). At present, only AMD output is supported.
+  One of `amd` (for AMD output), `cjs` (for CommonJS
+  output) or `globals` (for outputting to `window`).
+  At present, AMD and globals output are supported.
 
 ANONYMOUS
   If you use the --anonymous flag with the AMD type, the
@@ -54,6 +56,20 @@ NAME
   file (without the ending `.js`) as the module name.
   You may not use this option if your INPUT resolves
   to multiple files.
+
+GLOBAL
+  This option is only supported when the type is
+  `globals`. By default, the `globals` option will
+  attach all of the exports to `window`. This option
+  will attach the exports to a single named variable
+  on `window` instead.
+
+IMPORTS
+  This option is only supported when the type is
+  `globals`. It is a hash option. If your module
+  includes imports, you must use this option to
+  map the import names onto globals. For example,
+  `--imports ember:Ember underscore:_`
 ```
 
 ### Library

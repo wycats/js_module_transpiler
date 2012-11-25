@@ -1,3 +1,6 @@
+require "js_module_transpiler/amd_compiler"
+require "js_module_transpiler/globals_compiler"
+
 module JsModuleTranspiler
   class CompileError < StandardError
   end
@@ -12,9 +15,12 @@ module JsModuleTranspiler
     # not supported yet
     #EXPORT_FROM = %r{^\s*export\s*(?<exports>.*)\s*from\s*"(?<module>[^"]+)"\s*;\s*$}
 
-    def initialize(string, module_name=nil)
+    attr_reader :imports, :exports, :import_as, :export_as, :module_name, :lines
+
+    def initialize(string, module_name=nil, options={})
       @string = string
       @module_name = module_name
+      @options = options
 
       @imports = {}
       @import_as = {}
@@ -85,84 +91,11 @@ module JsModuleTranspiler
     end
 
     def to_amd
-      assert_valid
-
-      dependency_names = [] | @imports.keys | @import_as.keys
-
-      arguments, preamble = build_preamble(dependency_names)
-
-      unless @exports.empty?
-        dependency_names << "exports"
-        arguments << "__exports__"
-      end
-
-      output = []
-
-      if @module_name
-        output << %{define("#{@module_name}",}
-      else
-        output << %{define(}
-      end
-
-      output << "  [" + dependency_names.map(&:inspect).join(", ") + "],"
-      output << "  function(" + arguments.join(", ") + ") {"
-      output << "    \"use strict\";"
-
-      preamble.each do |line|
-        output << "    #{line}"
-      end
-
-      @lines.each do |line|
-        if line =~ /^\s*$/
-          output << line
-        else
-          output << "    #{line}"
-        end
-      end
-
-      @exports.each do |export|
-        output << "    __exports__.#{export} = #{export};"
-      end
-
-      if @export_as
-        output << "    return #{@export_as};"
-      end
-
-      output << "  });"
-
-      output.join("\n")
+      AMDCompiler.new(self, @options).stringify
     end
 
-    private
-
-    def assert_valid
-      if @export_as && !@exports.empty?
-        raise CompileError.new("You cannot use both `export =` and `export` in the same module")
-      end
-    end
-
-    def build_preamble(names)
-      preamble = []
-      arguments = []
-      number = 0
-
-      names.each do |name|
-        if @import_as.key?(name)
-          arguments << @import_as[name]
-        else
-          dependency = "__dependency#{number += 1}__"
-          arguments << dependency
-          preamble.concat imports_for_preamble(@imports[name], dependency)
-        end
-      end
-
-      [ arguments, preamble ]
-    end
-
-    def imports_for_preamble(import_names, dependency_name)
-      import_names.map do |import_name|
-        "var #{import_name} = #{dependency_name}.#{import_name};"
-      end
+    def to_globals
+      GlobalsCompiler.new(self, @options).stringify
     end
   end
 end
