@@ -25,6 +25,13 @@ module JsModuleTranspiler::TestHelpers
     compiler.to_amd.sub(/\n*\z/, '').should == output
   end
 
+  def should_compile_cjs(input, output, options={})
+    name = options[:anonymous] ? nil : "jquery"
+
+    output, compiler = normalize(input, output, name)
+    compiler.to_cjs.sub(/\n*\z/, '').should == output
+  end
+
   def should_compile_globals(input, output, options={})
     name = options.delete(:anonymous) ? nil : "jquery"
 

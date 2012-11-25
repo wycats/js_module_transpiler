@@ -44,7 +44,6 @@ OUTPUT
 TYPE
   One of `amd` (for AMD output), `cjs` (for CommonJS
   output) or `globals` (for outputting to `window`).
-  At present, AMD and globals output are supported.
 
 ANONYMOUS
   If you use the --anonymous flag with the AMD type, the
@@ -81,6 +80,21 @@ require "js_module_transpiler"
 
 compiler = JsModuleTranspiler::Compiler.new(string, name)
 compiler.to_amd # AMD output
+```
+
+If you want to emit globals output, and your module has
+imports, you must supply an `imports` hash. You can also
+use the `global` option to specify that exports should
+be added to a single global instead of `window`.
+
+```ruby
+require "js_module_transpiler"
+
+imports = { "underscore" => "_", "ember" => "Ember" }
+options = { imports: imports, global: "RSVP" }
+
+compiler = JsModuleTranspiler::Compiler.new(string, name, options)
+compiler.to_globals # AMD output
 ```
 
 The `string` parameter is a string of JavaScript written using

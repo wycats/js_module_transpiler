@@ -1,5 +1,6 @@
 require "js_module_transpiler/amd_compiler"
 require "js_module_transpiler/globals_compiler"
+require "js_module_transpiler/cjs_compiler"
 
 module JsModuleTranspiler
   class CompileError < StandardError
@@ -96,6 +97,10 @@ module JsModuleTranspiler
 
     def to_globals
       GlobalsCompiler.new(self, @options).stringify
+    end
+
+    def to_cjs
+      CjsCompiler.new(self, @options).stringify
     end
   end
 end
