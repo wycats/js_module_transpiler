@@ -7,7 +7,9 @@ module JsModuleTranspiler
       received_args = []
 
       if !@exports.empty? || @export_as
-        if into = @options[:into]
+        if @export_as
+          passed_args << "window"
+        elsif into = @options[:into]
           passed_args << "window.#{into} = {}"
         else
           passed_args << "window"
