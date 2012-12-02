@@ -48,6 +48,23 @@ describe "JsModuleTranspiler::Compiler (to_globals)" do
     OUTPUT
   end
 
+  it "uses a single window export if `export = Expression` is used with the :into option" do
+    should_compile_globals <<-INPUT, <<-OUTPUT, :into => "Ember"
+      var get = function() {};
+      var set = function() {};
+
+      export = { get: get, set: set };
+    INPUT
+      (function(exports) {
+        "use strict";
+        var get = function() {};
+        var set = function() {};
+
+        exports.Ember = { get: get, set: set };
+      })(window);
+    OUTPUT
+  end
+
   it "generates an export object if `export { foo, bar }` is used" do
     should_compile_globals <<-INPUT, <<-OUTPUT
       var get = function() { };
